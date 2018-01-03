@@ -73,6 +73,30 @@ module ReVIEW
       end
       args
     end
+
+    def imgtable_image(id, _caption, metric)
+      metrics = parse_metric('latex', metric)
+      if metrics.present?
+        puts "\\includegraphics[#{metrics}]{#{@chapter.image(id).path}}"
+      else
+        puts "\\includegraphics[width=\\maxwidth]{#{@chapter.image(id).path}}"
+      end
+    end
+
+    def captionblock(type, lines, caption)
+      if caption.present?
+        puts "\\begin{review#{type}}[#{compile_inline(caption)}]\n"
+      else
+        puts "\\begin{review#{type}}\n"
+      end
+      blocked_lines = split_paragraph(lines)
+      puts blocked_lines.join("\n\n")
+      puts "\\end{review#{type}}\n"
+    end
+
+    def inline_uchar(str)
+      [str.to_i(16)].pack('U')
+    end
   end
 
   class LATEXBuilder

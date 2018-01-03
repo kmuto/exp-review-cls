@@ -49,10 +49,6 @@ print('hello');
 puts 'Hello'
 //}
 
-#@# //source{
-#@# //}
-#@# FIXME:キャプションなしはLaTeXだとエラーになることがわかった。Re:VIEW側修正予定
-
 実行例を示すとき用にはcmdを用意しています。いずれにせよ、商業書籍レベルでは必要なので用意しているものの、原稿レベルで書き手が使うコードブロックはほどほどの数に留めておいたほうがいいのではないかと思います。TeX版の紙面ではデフォルトは黒アミ。印刷によってはベタ黒塗りはちょっと怖いかもなので、あまり長々したものには使わないほうがいいですね。
 
 //cmd{
@@ -140,7 +136,7 @@ C	D
 
 中寄せはcenteringです。
 
-//flushright{
+//centering{
 中寄せ本文。@<b>{太字bold}@<i>{italicイタ}@<tt>{等幅code}
 
 2行目の中寄せ本文。
@@ -323,18 +319,21 @@ a_{m1} & \cdots & a_{mn}
 ==={crossref} 参照
 #@# FIXME:任意ラベルを使うと、EPUBチェックエラーになることがある？
 
- * 章番号：@<chap>{ch01}、@<chap>{appA}、@<chap>{part2}、@<chap>{bib}
- * 章題：@<title>{ch01}、@<title>{part2}、@<title>{appA}、@<title>{bib}
- * 章番号+題：@<chapref>{ch02}、@<chapref>{part2}、@<chapref>{appA}、@<chapref>{bib}
+ * 章番号：@<chap>{ch01}
+#@# 、@<chap>{appA}、@<chap>{part2}、@<chap>{bib}
+ * 章題：@<title>{ch01}
+#@# 、@<title>{part2}、@<title>{appA}、@<title>{bib}
+ * 章番号+題：@<chapref>{ch02}
+#@# 、@<chapref>{part2}、@<chapref>{appA}、@<chapref>{bib}
 #@# FIXME:TeXで、部が実際のページではIIなのに参照では2になっているのはおかしい→i18n.ymlがおかしいせいか
 
 節や項への参照はhdを使います。
 
  * @<hd>{ch02|ブロック命令}の@<hd>{ch02|ブロック命令|図}
  * @<hd>{ch02|crossref}
- * コラム参照 @<column>{ch03|column2}
+#@# * コラム参照 @<column>{ch03|column2}
 
-他章への図表リスト参照の例です（@<list>{pre01|main1}、@<img>{pre01|fractal}、@<table>{pre01|tbl1}、@<list>{appA|lista-1}、@<img>{appA|puzzle}、@<table>{appA|taba-1}）。
+#@# 他章への図表リスト参照の例です（@<list>{pre01|main1}、@<img>{pre01|fractal}、@<table>{pre01|tbl1}、@<list>{appA|lista-1}、@<img>{appA|puzzle}、@<table>{appA|taba-1}）。
 
 なお、この「.」区切りなどのフォーマットは@<tt>{i18n.yml}あるいは@<tt>{locale.yml}でカスタマイズされ得る（format_number、format_number_header、format_number_without_chapter、format_number_header_without_chapter）ので、スタイルで固定化するのは避けるべきです。
 
@@ -343,7 +342,7 @@ labelで定義したラベルへの参照の例です。EPUBだと@<href>{#inlin
 #@# FIXME:TeXではpagerefがほしい、ということがありそう。EPUBとの整合性を検討
 
 === 参考文献
-参考文献@<tt>{bib.re}ファイルへの文献参照は、@<bib>{lins}とします。
+#@# 参考文献@<tt>{bib.re}ファイルへの文献参照は、@<bib>{lins}とします。
 
 === 索引
 @<hidx>{索引}@<hidx>{index}索引はTeXとIDGXML以外では妥当な動作を定義していません。idx@<hidx>{索引<<>>idx}は文中にも表示し、hidx@<hidx>{索引<<>>hidx}は文中からは隠した形の索引にします。読みは@<idx>{Mecab}があればそちらを使いますが、@<idx>{辞書ファイル}を直接定義することもできます。@<hidx>{!<>"$&()~=|,./\{\}?_[]*:;+%#()'`^}

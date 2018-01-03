@@ -52,7 +52,7 @@ task web: WEBROOT
 desc 'generate EPUB file'
 task epub: BOOK_EPUB
 
-SRC = FileList['*.re'] + [CONFIG_FILE]
+SRC = FileList['*.re', '*.yml', '*.rb', 'sty/*.sty', 'layouts/*.erb'] + [CONFIG_FILE]
 
 file BOOK_PDF => SRC do
   FileUtils.rm_rf [BOOK_PDF, BOOK, BOOK + '-pdf']
