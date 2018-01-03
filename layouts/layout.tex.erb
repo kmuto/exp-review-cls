@@ -1,0 +1,131 @@
+\documentclass[book,twoside]{jlreq}
+\usepackage{luatexja-fontspec}
+
+% luatexドライバを明示しないとmdframedの座標計算が変になる
+\usepackage[dvipdfmx,luatex]{graphicx}%
+\usepackage[dvipdfmx,table,luatex]{xcolor}[2007/01/21 v2.11]%requires colortbl, array
+\usepackage{tikz}[2015/08/07 v3.0.1a]
+\usetikzlibrary{calc}%requires xcolor
+\usepackage[framemethod=TikZ]{mdframed}[2014/05/30 v2.0]%requires expl3 w/ driver=dvipdfmx
+\usepackage{multirow}
+\usepackage{amsmath}[2013/01/14 v2.14]
+\usepackage{amssymb}[2013/01/14 v3.01]
+\usepackage{bm}[2014/10/28 v1.1c]
+\usepackage{alltt}
+
+\usepackage{url}
+\usepackage{pxrubrica}
+
+\makeatletter
+
+\mdfdefinestyle{review@emlist}{%
+backgroundcolor=black!10,
+innertopmargin=3mm,innerbottommargin=3mm,
+innerleftmargin=3mm,innerrightmargin=3mm
+}
+\newenvironment{review@emlist}{%
+ \begin{mdframed}[style=review@emlist]%
+  }{\end{mdframed}}%\end{mdframed}
+
+\mdfdefinestyle{review@list}{%
+innertopmargin=3mm,innerbottommargin=3mm,
+innerleftmargin=3mm,innerrightmargin=3mm,
+linewidth=0.15mm
+}
+\newenvironment{review@list}{%
+ \begin{mdframed}[style=review@list]%
+  }{\end{mdframed}}%\end{mdframed}
+
+\mdfdefinestyle{review@source}{%
+innertopmargin=3mm,innerbottommargin=3mm,
+innerleftmargin=3mm,innerrightmargin=3mm,
+linewidth=0.15mm
+}
+\newenvironment{review@source}{%
+ \begin{mdframed}[style=review@source]%
+  }{\end{mdframed}}%\end{mdframed}
+
+\mdfdefinestyle{review@cmd}{%
+innertopmargin=3mm,innerbottommargin=3mm,
+innerleftmargin=3mm,innerrightmargin=3mm,
+backgroundcolor=black!99,
+}
+\newenvironment{review@cmd}{%
+ \begin{mdframed}[style=review@cmd]%
+  }{\end{mdframed}}%\end{mdframed}
+
+% reviewemlist (//emlist)
+\newenvironment{reviewemlist}{%
+  \begin{review@emlist}\begin{alltt}}%
+ {\end{alltt}\end{review@emlist}}
+
+% reviewlist (//list)
+\newenvironment{reviewlist}{%
+  \begin{review@list}\begin{alltt}}%
+ {\end{alltt}\end{review@list}}
+
+% reviewsource (//source)
+\newenvironment{reviewsource}{%
+  \begin{review@source}\begin{alltt}}%
+ {\end{alltt}\end{review@source}}
+
+% reviewsource (//cmd)
+% colorの範囲を作るために\begingroup 〜 \endgroupで囲む
+\newenvironment{reviewcmd}{%
+  \begin{review@cmd}\begin{alltt}\begingroup\color{white}\ignorespaces}%
+ {\endgroup\end{alltt}\end{review@cmd}}
+
+\newcommand{\reviewlistcaption}[1]{{#1}}% TODO
+\newcommand{\reviewemlistcaption}[1]{{#1}}% TODO
+\newcommand{\reviewsourcecaption}[1]{{#1}}% TODO
+\newcommand{\reviewcmdcaption}[1]{{#1}}% TODO
+\newenvironment{reviewlistblock}{\par}{\par}
+
+% reviewlistblockの定義。しかしこうフロートにしてしまうと、長いリストの分断が厄介になる…
+%\newcommand{\reviewlistblockname}{<%= escape_latex(I18n.t("list"))%>}
+%\newcounter{reviewlistblock}[chapter]
+%\renewcommand{\thereviewlistblock}{%
+%  \ifnum\c@chapter>\z@\thechapter.\fi\@arabic\c@reviewlistblock}% 「.」リテラル区切りではなくI18nから引き出したい
+%\newenvironment{reviewlistblock}{\@@par% このあたり、munepiさんクラスからの理解がおいついていない
+%   \def\caption{%
+%     \refstepcounter{reviewlistblock}%
+%     \expandafter\@firstofone
+%    {\@dblarg{\@caption}}%  dblargというのはカーネルコマンドで、\@dblarg{<command>}{<arg>}が\{<command>}[<arg>]{<arg>}に展開されるのだそうだ。
+%   }%
+%   \long\def\@caption[##1]##2{%
+%     \par
+%     \needspace{\baselineskip}%
+%     \begingroup
+%       \@parboxrestore
+%       \normalsize
+%       \@makecaption{\reviewlistblockname\thereviewlistblock}{\ignorespaces ##2}\par% 最初の引数は「リスト1.1」を作るところ。kernやskipなどを調整すべきか
+%     \endgroup}%
+% }{}
+
+\newcommand{\reviewimageref}[2]{<%= escape_latex(I18n.t("image"))%> #1}
+\newcommand{\reviewtableref}[2]{<%= escape_latex(I18n.t("table"))%> #1}
+\newcommand{\reviewlistref}[1]{<%= escape_latex(I18n.t("list"))%> #1}
+\newcommand{\reviewbibref}[2]{#1}
+\newcommand{\reviewcolumnref}[2]{<%= escape_latex(I18n.t("columnname"))%> #1}
+\newcommand{\reviewsecref}[2]{#1}
+
+\makeatother% @を戻す
+
+\begin{document}
+\frontmatter
+<%= @input_files["PREDEF"] %>
+
+\mainmatter
+<%= @input_files["CHAPS"] %>
+
+%\reviewappendix
+<%= @input_files["APPENDIX"] %>
+
+<%- if @input_files["POSTDEF"] or @config["colophon"] -%>
+\backmatter
+<%- end -%>
+
+<%- if @input_files["POSTDEF"] -%>
+<%= @input_files["POSTDEF"] %>
+<%- end -%>
+\end{document}
