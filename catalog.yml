@@ -1,4 +1,15 @@
+PREDEF:
+  - pre01.re
+
 CHAPS:
-  - test.re
-  - ch01.re
-#  - ch02.re
+ - 部扉見出し:
+   - ch01.re
+ - part2.re:
+   - ch02.re
+   - ch03.re
+
+APPENDIX:
+  - appA.re
+
+POSTDEF:
+  - bib.re

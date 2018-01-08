@@ -82,7 +82,7 @@ $ @<b>{ls /}
 === 表
 表はtableを使います。@<table>{tab2-1}
 
-tableもキャプション・セル内含めてTeXでは脚注できないですね…
+tableもキャプション・セル内含めてTeXでは脚注できないですね…（要footnotemark）
 本当は→@<fn>{tabalign}はキャプション内。TeXだとセル内の脚注は脚注文書が消えています。
 
 #@# //table[tab2-1][表の@<b>{例}@<fn>{tabalign}]{
@@ -286,7 +286,7 @@ a_{m1} & \cdots & a_{mn}
 === 書体
 本文での……キーワード@<kw>{キーワード, keyword}@<fn>{kw}、太字@<b>{b太字}、イタリック@<i>{iイタリック}、等幅@<tt>{tt等幅}、強調@<strong>{strong強調}、強調@<em>{em強調}、下線@<u>{u下線}、等幅@<code>{code等幅}、等幅太字@<ttb>{ttb等幅太字}、等幅イタリック@<tti>{tti等幅イタリック}、網カケ@<ami>{amiアミ}、16進UTF文字指定@<uchar>{3042}、インラインアイコン@<icon>{inlineicon}
 
-傍点@<embed>{@}<bou>{bou傍点}、ルビ@<embed>{@}<ruby>{愕然, がくぜん}、縦中横@<embed>{@}<tcy>{90}、はTeXでは現状、別パッケージが必要です。
+傍点@<bou>{bou傍点}、@<ruby>{愕,がく}@<ruby>{然,ぜん}、縦中横@<embed>{@}<tcy>{90}、はTeXでは現状、別パッケージが必要です。
 #@# FIXME:TEXでの文字スタイル。外部パッケージが必要
 #@# 傍点@<bou>{bou傍点}、
 #@# ルビ@<ruby>{愕然, がくぜん}、
@@ -319,21 +319,18 @@ a_{m1} & \cdots & a_{mn}
 ==={crossref} 参照
 #@# FIXME:任意ラベルを使うと、EPUBチェックエラーになることがある？
 
- * 章番号：@<chap>{ch01}
-#@# 、@<chap>{appA}、@<chap>{part2}、@<chap>{bib}
- * 章題：@<title>{ch01}
-#@# 、@<title>{part2}、@<title>{appA}、@<title>{bib}
- * 章番号+題：@<chapref>{ch02}
-#@# 、@<chapref>{part2}、@<chapref>{appA}、@<chapref>{bib}
+ * 章番号：@<chap>{ch01}、@<chap>{appA}、@<chap>{part2}、@<chap>{bib}
+ * 章題：@<title>{ch01}、@<title>{part2}、@<title>{appA}、@<title>{bib}
+ * 章番号+題：@<chapref>{ch02}、@<chapref>{part2}、@<chapref>{appA}、@<chapref>{bib}
 #@# FIXME:TeXで、部が実際のページではIIなのに参照では2になっているのはおかしい→i18n.ymlがおかしいせいか
 
 節や項への参照はhdを使います。
 
  * @<hd>{ch02|ブロック命令}の@<hd>{ch02|ブロック命令|図}
  * @<hd>{ch02|crossref}
-#@# * コラム参照 @<column>{ch03|column2}
+ * コラム参照 @<column>{ch03|column2}
 
-#@# 他章への図表リスト参照の例です（@<list>{pre01|main1}、@<img>{pre01|fractal}、@<table>{pre01|tbl1}、@<list>{appA|lista-1}、@<img>{appA|puzzle}、@<table>{appA|taba-1}）。
+他章への図表リスト参照の例です（@<list>{pre01|main1}、@<img>{pre01|fractal}、@<table>{pre01|tbl1}、@<list>{appA|lista-1}、@<img>{appA|puzzle}、@<table>{appA|taba-1}）。
 
 なお、この「.」区切りなどのフォーマットは@<tt>{i18n.yml}あるいは@<tt>{locale.yml}でカスタマイズされ得る（format_number、format_number_header、format_number_without_chapter、format_number_header_without_chapter）ので、スタイルで固定化するのは避けるべきです。
 
@@ -342,7 +339,7 @@ labelで定義したラベルへの参照の例です。EPUBだと@<href>{#inlin
 #@# FIXME:TeXではpagerefがほしい、ということがありそう。EPUBとの整合性を検討
 
 === 参考文献
-#@# 参考文献@<tt>{bib.re}ファイルへの文献参照は、@<bib>{lins}とします。
+参考文献@<tt>{bib.re}ファイルへの文献参照は、@<bib>{lins}とします。
 
 === 索引
 @<hidx>{索引}@<hidx>{index}索引はTeXとIDGXML以外では妥当な動作を定義していません。idx@<hidx>{索引<<>>idx}は文中にも表示し、hidx@<hidx>{索引<<>>hidx}は文中からは隠した形の索引にします。読みは@<idx>{Mecab}があればそちらを使いますが、@<idx>{辞書ファイル}を直接定義することもできます。@<hidx>{!<>"$&()~=|,./\{\}?_[]*:;+%#()'`^}

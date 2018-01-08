@@ -1,3 +1,4 @@
+%\RequirePackage{luatex85}
 \documentclass[book,twoside,
   paper=b5,
   fontsize=12Q, jafontsize=12Q, baselineskip=21.6Q
@@ -6,12 +7,11 @@
 % TODO: usepackage定義はいずれ別styファイルへ
 \usepackage{luatexja-fontspec}
 
-% luatexドライバを明示しないとmdframedの座標計算が変になる
+% luatexドライバを明示しないとmdframedもtcolorboxも座標計算が変になる
 \usepackage[dvipdfmx,luatex]{graphicx}%
 \usepackage[dvipdfmx,table,luatex]{xcolor}[2007/01/21 v2.11]%requires colortbl, array
 \usepackage{tikz}[2015/08/07 v3.0.1a]
 \usetikzlibrary{calc}%requires xcolor
-\usepackage[framemethod=TikZ]{mdframed}[2014/05/30 v2.0]%requires expl3 w/ driver=dvipdfmx
 \usepackage{multirow}
 \usepackage{amsmath}[2013/01/14 v2.14]
 \usepackage{amssymb}[2013/01/14 v3.01]
@@ -22,94 +22,35 @@
 
 \usepackage{url}
 \usepackage{pxrubrica}
+\usepackage{tcolorbox}
+\tcbuselibrary{xparse,hooks,skins,breakable}
 
 % TODO: 以下Re:VIEWタグマッチング定義はいずれ別styファイルへ
 \makeatletter
 
 % コードリスト囲み
-\mdfdefinestyle{review@emlist}{%
-backgroundcolor=black!10,
-innertopmargin=3mm,innerbottommargin=3mm,
-innerleftmargin=3mm,innerrightmargin=3mm
-}
-\newenvironment{review@emlist}{%
- \begin{mdframed}[style=review@emlist]%
-  }{\end{mdframed}}%\end{mdframed}
-
-\mdfdefinestyle{review@list}{%
-innertopmargin=3mm,innerbottommargin=3mm,
-innerleftmargin=3mm,innerrightmargin=3mm,
-linewidth=0.15mm
-}
-\newenvironment{review@list}{%
- \begin{mdframed}[style=review@list]%
-  }{\end{mdframed}}%\end{mdframed}
-
-\mdfdefinestyle{review@source}{%
-innertopmargin=3mm,innerbottommargin=3mm,
-innerleftmargin=3mm,innerrightmargin=3mm,
-linewidth=0.15mm
-}
-\newenvironment{review@source}{%
- \begin{mdframed}[style=review@source]%
-  }{\end{mdframed}}%\end{mdframed}
-
-\mdfdefinestyle{review@cmd}{%
-innertopmargin=3mm,innerbottommargin=3mm,
-innerleftmargin=3mm,innerrightmargin=3mm,
-backgroundcolor=black!99,
-}
-\newenvironment{review@cmd}{%
- \begin{mdframed}[style=review@cmd]%
-  }{\end{mdframed}}%\end{mdframed}
-
-% reviewemlist (//emlist)
+% tcolorboxバージョンで実装
 \newenvironment{reviewemlist}{%
-  \begin{review@emlist}\begin{alltt}}%
- {\end{alltt}\end{review@emlist}}
+  \begin{tcolorbox}[skin=enhanced jigsaw,breakable,colback=black!10,colframe=black!10,boxrule=0mm,arc=0mm]\begin{alltt}}%
+ {\end{alltt}\end{tcolorbox}}
 
-% reviewlist (//list)
 \newenvironment{reviewlist}{%
-  \begin{review@list}\begin{alltt}}%
- {\end{alltt}\end{review@list}}
+  \begin{tcolorbox}[skin=enhanced jigsaw,breakable,colback=white,colframe=black,boxrule=0.15mm,arc=0mm]\begin{alltt}}%
+ {\end{alltt}\end{tcolorbox}}
 
-% reviewsource (//source)
 \newenvironment{reviewsource}{%
-  \begin{review@source}\begin{alltt}}%
- {\end{alltt}\end{review@source}}
+  \begin{tcolorbox}[skin=enhanced jigsaw,breakable,colback=white,colframe=black,boxrule=0.15mm,arc=0mm]\begin{alltt}}%
+ {\end{alltt}\end{tcolorbox}}
 
-% reviewsource (//cmd)
-% colorの範囲を作るために\begingroup 〜 \endgroupで囲む
 \newenvironment{reviewcmd}{%
-  \begin{review@cmd}\begin{alltt}\begingroup\color{white}\ignorespaces}%
- {\endgroup\end{alltt}\end{review@cmd}}
+  \begin{tcolorbox}[skin=enhanced jigsaw,breakable,colback=black!99,colframe=black!99,boxrule=0mm,arc=0mm]\begin{alltt}\begingroup\color{white}\ignorespaces}%
+ {\endgroup\end{alltt}\end{tcolorbox}}
 
 \newcommand{\reviewlistcaption}[1]{{#1}}% TODO
 \newcommand{\reviewemlistcaption}[1]{{#1}}% TODO
 \newcommand{\reviewsourcecaption}[1]{{#1}}% TODO
 \newcommand{\reviewcmdcaption}[1]{{#1}}% TODO
 \newenvironment{reviewlistblock}{\par}{\par}
-
-% reviewlistblockの定義。しかしこうフロートにしてしまうと、長いリストの分断が厄介になる…
-%\newcommand{\reviewlistblockname}{<%= escape_latex(I18n.t("list"))%>}
-%\newcounter{reviewlistblock}[chapter]
-%\renewcommand{\thereviewlistblock}{%
-%  \ifnum\c@chapter>\z@\thechapter.\fi\@arabic\c@reviewlistblock}% 「.」リテラル区切りではなくI18nから引き出したい
-%\newenvironment{reviewlistblock}{\@@par% このあたり、munepiさんクラスからの理解がおいついていない
-%   \def\caption{%
-%     \refstepcounter{reviewlistblock}%
-%     \expandafter\@firstofone
-%    {\@dblarg{\@caption}}%  dblargというのはカーネルコマンドで、\@dblarg{<command>}{<arg>}が\{<command>}[<arg>]{<arg>}に展開されるのだそうだ。
-%   }%
-%   \long\def\@caption[##1]##2{%
-%     \par
-%     \needspace{\baselineskip}%
-%     \begingroup
-%       \@parboxrestore
-%       \normalsize
-%       \@makecaption{\reviewlistblockname\thereviewlistblock}{\ignorespaces ##2}\par% 最初の引数は「リスト1.1」を作るところ。kernやskipなどを調整すべきか
-%     \endgroup}%
-% }{}
 
 \newcommand{\reviewimageref}[2]{<%= escape_latex(I18n.t("image"))%> #1}
 \newcommand{\reviewtableref}[2]{<%= escape_latex(I18n.t("table"))%> #1}
@@ -151,21 +92,37 @@ backgroundcolor=black!99,
 \newcommand*\reviewimgtablecaption[1]{\caption{#1}}
 
 % note等の囲み
-\mdfdefinestyle{review@note}{%
-innertopmargin=3mm,innerbottommargin=3mm,
-innerleftmargin=3mm,innerrightmargin=3mm,
-roundcorner=2mm,
-frametitlefont={\sffamily\bfseries\color{white}},
-frametitlerule=true,
-frametitlebackgroundcolor=black,
-} % frametitleの文字列はi18n化させたい
-\newenvironment{review@note}[1]{%
- \begin{mdframed}[style=review@note,frametitle={NOTE #1}]%
-  }{\end{mdframed}}%\end{mdframed}
+\newenvironment{reviewnote}[1][]{%
+  \begin{tcolorbox}[skin=enhanced jigsaw,breakable,empty,coltitle=black,title={\sffamily\bfseries NOTE #1},borderline horizontal={0.5mm}{0pt}{black!50}, left=1mm, right=1mm, left skip=6mm]}
+ {\end{tcolorbox}}
 
-\newenvironment{reviewnote}[1]{%
-  \begin{review@note}[#1]}% なんかこのへんどこか単純に間違ってる… reviewnoteの1つめの引数をframetitleに渡したい、ということ
- {\end{review@note}}
+\newenvironment{reviewmemo}[1][]{%
+  \begin{tcolorbox}[skin=enhanced jigsaw,breakable,empty,coltitle=black,title={\sffamily\bfseries MEMO #1},borderline horizontal={0.5mm}{0pt}{black!50}, left=1mm, right=1mm, left skip=6mm]}
+ {\end{tcolorbox}}
+
+\newenvironment{reviewtip}[1][]{%
+  \begin{tcolorbox}[skin=enhanced jigsaw,breakable,empty,coltitle=black,title={\sffamily\bfseries Tips #1},borderline horizontal={0.5mm}{0pt}{black!50}, left=1mm, right=1mm, left skip=6mm]}
+ {\end{tcolorbox}}
+
+\newenvironment{reviewinfo}[1][]{%
+  \begin{tcolorbox}[skin=enhanced jigsaw,breakable,empty,coltitle=black,title={\sffamily\bfseries INFORMATION #1},borderline horizontal={0.5mm}{0pt}{black!50}, left=1mm, right=1mm, left skip=6mm]}
+ {\end{tcolorbox}}
+
+\newenvironment{reviewwarning}[1][]{%
+  \begin{tcolorbox}[skin=enhanced jigsaw,breakable,empty,coltitle=black,title={\sffamily\bfseries WARNING! #1},borderline horizontal={0.5mm}{0pt}{black!50}, left=1mm, right=1mm, left skip=6mm]}
+ {\end{tcolorbox}}
+
+\newenvironment{reviewimportant}[1][]{%
+  \begin{tcolorbox}[skin=enhanced jigsaw,breakable,empty,coltitle=black,title={\sffamily\bfseries IMPORTANT! #1},borderline horizontal={0.5mm}{0pt}{black!50}, left=1mm, right=1mm, left skip=6mm]}
+ {\end{tcolorbox}}
+
+\newenvironment{reviewcaution}[1][]{%
+  \begin{tcolorbox}[skin=enhanced jigsaw,breakable,empty,coltitle=black,title={\sffamily\bfseries CAUTION! #1},borderline horizontal={0.5mm}{0pt}{black!50}, left=1mm, right=1mm, left skip=6mm]}
+ {\end{tcolorbox}}
+
+\newenvironment{reviewnotice}[1][]{%
+  \begin{tcolorbox}[skin=enhanced jigsaw,breakable,empty,coltitle=black,title={\sffamily\bfseries NOTICE #1},borderline horizontal={0.5mm}{0pt}{black!50}, left=1mm, right=1mm, left skip=6mm]}
+ {\end{tcolorbox}}
 
 % 書体
 \newcommand{\reviewkw}[1]{{\sffamily\bfseries #1}}
@@ -173,6 +130,13 @@ frametitlebackgroundcolor=black,
 \newcommand{\reviewem}[1]{{\bfseries #1}}
 \newcommand{\reviewunderline}[1]{{\underline #1}}% Underlineのほうがよい?
 \newcommand{\reviewami}[1]{#1}% TODO
+
+% コラム
+\newenvironment{reviewcolumn}[1][COLUMN]{%
+  \begin{tcolorbox}[skin=enhanced jigsaw,breakable,boxrule=0.2mm,arc=2mm,colback=white,colframe=black!100!white,title={\sffamily\bfseries #1}]\par}
+ {\end{tcolorbox}}
+
+\newcommand{\reviewappendix}[0]{\appendix}
 
 % 基本版面系設定カスタマイズは別styファイルへ
 \ModifyPageStyle{headings}{nombre_position={top-fore_edge},running_head_position={top-fore_edge}}
@@ -193,7 +157,7 @@ frametitlebackgroundcolor=black,
 \mainmatter
 <%= @input_files["CHAPS"] %>
 
-%\reviewappendix
+\reviewappendix
 <%= @input_files["APPENDIX"] %>
 
 <%- if @input_files["POSTDEF"] or @config["colophon"] -%>

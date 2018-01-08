@@ -97,6 +97,19 @@ module ReVIEW
     def inline_uchar(str)
       [str.to_i(16)].pack('U')
     end
+
+    def column_begin(level, label, caption)
+      blank
+      if label
+        puts "\\hypertarget{#{column_label(label)}}{}"
+      else
+        puts "\\hypertarget{#{column_label(caption)}}{}"
+      end
+      if level <= @book.config['toclevel'].to_i
+        puts "\\addcontentsline{toc}{#{HEADLINE[level]}}{#{compile_inline(caption)}}"
+      end
+      puts "\\begin{reviewcolumn}[#{compile_inline(caption)}]\n"
+    end
   end
 
   class LATEXBuilder
