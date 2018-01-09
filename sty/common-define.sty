@@ -1,0 +1,35 @@
+% common
+\newcommand{\reviewlistcaption}[1]{{#1}}% TODO
+\newcommand{\reviewemlistcaption}[1]{{#1}}% TODO
+\newcommand{\reviewsourcecaption}[1]{{#1}}% TODO
+\newcommand{\reviewcmdcaption}[1]{{#1}}% TODO
+\newenvironment{reviewlistblock}{\par}{\par}
+
+\newenvironment{reviewimage}[1][ht]{%
+  \begin{figure}[#1]\begin{center}}{\end{center}\end{figure}}
+
+\newenvironment{reviewdummyimage}[1][ht]{%
+  \begin{reviewimage}[#1]}{\end{reviewimage}}
+
+\newcommand*{\reviewindepimagecaption[1]}{\caption{#1}} % TODO:採番しない
+
+% 表
+\newenvironment{reviewtablesetup}{%
+}{}
+
+\newcommand{\reviewth}[1]{\cellcolor{black!70}\textcolor{white}{\bfseries #1}}
+\newcommand*\reviewtablecaption[1]{\caption{#1}}
+\newenvironment{reviewtable}[1]{%
+\begin{reviewtablesetup}\begin{tabular}{#1}}%
+{\end{tabular}\end{reviewtablesetup}}
+
+\newcommand*\reviewimgtablecaption[1]{\caption{#1}}
+
+% 書体
+\newcommand{\reviewkw}[1]{{\sffamily\bfseries #1}}
+\newcommand{\reviewstrong}[1]{{\sffamily\bfseries #1}}
+\newcommand{\reviewem}[1]{{\bfseries #1}}
+\newcommand{\reviewunderline}[1]{{\underline #1}}% Underlineのほうがよい?
+\newcommand{\reviewami}[1]{#1}% TODO
+
+\newcommand{\reviewappendix}[0]{\appendix}

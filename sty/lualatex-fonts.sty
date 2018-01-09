@@ -1,0 +1,20 @@
+\usepackage[match]{luatexja-fontspec}
+
+% 欧文 main=地の文、sans=ゴシック文
+%\setmainfont[Ligatures=TeX]{TeXGyreTermes}
+%\setsansfont[Ligatures=TeX]{TeXGyreHeros}
+%\setmainfont[Ligatures=TeX,BoldFont=NotoSansCJKjp-Bold.otf]{NotoSerifCJKjp-Regular.otf}
+%\setsansfont[Ligatures=TeX]{NotoSansCJKjp-Bold.otf}
+
+% 和文 main=地の文、sans=ゴシック文
+% BoldFont=はそのTeX書体指定状態でBになったとき
+%\setmainjfont[BoldFont=A-OTF-UDShinGoNTPr6N-Medium.otf]{A-OTF-RyuminPro-Regular.otf}
+%\setsansjfont{A-OTF-UDShinGoNTPr6N-Medium.otf}
+\setmainjfont[BoldFont=NotoSansCJKjp-Bold.otf]{NotoSerifCJKjp-Regular.otf}
+\setsansjfont{NotoSansCJKjp-Bold.otf}
+
+% コード書体
+\setmonofont[BoldFont=SourceHanCodeJP-Bold.otf,ItalicFont=SourceHanCodeJP-NormalIt.otf]{SourceHanCodeJP-Normal.otf}
+\setmonojfont[BoldFont=NotoSansCJKjp-Bold.otf,ItalicFont=NotoSansCJKjp-Regular.otf]{NotoSansCJKjp-Regular.otf}
+%\def\shinmg6nm{\fontspec{A-OTF-ShinMGoPr6N-Medium.otf}\jfontspec{A-OTF-ShinMGoPr6N-Medium.otf}}
+% こうすると{\shinmg6nm 〜}で書体を変えられる

@@ -1,0 +1,95 @@
+\usepackage[framemethod=TikZ]{mdframed}[2014/05/30 v2.0]%requires expl3 w/ driver=dvipdfmx
+
+\mdfdefinestyle{review@emlist}{%
+backgroundcolor=black!10,
+innertopmargin=3mm,innerbottommargin=3mm,
+innerleftmargin=3mm,innerrightmargin=3mm
+}
+\newenvironment{review@emlist}{%
+ \begin{mdframed}[style=review@emlist]%
+  }{\end{mdframed}}%\end{mdframed}
+
+\mdfdefinestyle{review@list}{%
+innertopmargin=3mm,innerbottommargin=3mm,
+innerleftmargin=3mm,innerrightmargin=3mm,
+linewidth=0.15mm
+}
+\newenvironment{review@list}{%
+ \begin{mdframed}[style=review@list]%
+  }{\end{mdframed}}%\end{mdframed}
+
+\mdfdefinestyle{review@source}{%
+innertopmargin=3mm,innerbottommargin=3mm,
+innerleftmargin=3mm,innerrightmargin=3mm,
+linewidth=0.15mm
+}
+\newenvironment{review@source}{%
+ \begin{mdframed}[style=review@source]%
+  }{\end{mdframed}}%\end{mdframed}
+
+\mdfdefinestyle{review@cmd}{%
+innertopmargin=3mm,innerbottommargin=3mm,
+innerleftmargin=3mm,innerrightmargin=3mm,
+backgroundcolor=black!99,
+}
+\newenvironment{review@cmd}{%
+ \begin{mdframed}[style=review@cmd]%
+  }{\end{mdframed}}%\end{mdframed}
+
+% reviewemlist (//emlist)
+\newenvironment{reviewemlist}{%
+  \begin{review@emlist}\begin{alltt}}%
+ {\end{alltt}\end{review@emlist}}
+
+% reviewlist (//list)
+\newenvironment{reviewlist}{%
+  \begin{review@list}\begin{alltt}}%
+ {\end{alltt}\end{review@list}}
+
+% reviewsource (//source)
+\newenvironment{reviewsource}{%
+  \begin{review@source}\begin{alltt}}%
+ {\end{alltt}\end{review@source}}
+
+% reviewsource (//cmd)
+% colorの範囲を作るために\begingroup 〜 \endgroupで囲む
+\newenvironment{reviewcmd}{%
+  \begin{review@cmd}\begin{alltt}\begingroup\color{white}\ignorespaces}%
+ {\endgroup\end{alltt}\end{review@cmd}}
+
+% reviewlistblockの定義。しかしこうフロートにしてしまうと、長いリストの分断が厄介になる…
+%\newcommand{\reviewlistblockname}{<%= escape_latex(I18n.t("list"))%>}
+%\newcounter{reviewlistblock}[chapter]
+%\renewcommand{\thereviewlistblock}{%
+%  \ifnum\c@chapter>\z@\thechapter.\fi\@arabic\c@reviewlistblock}% 「.」リテラル区切りではなくI18nから引き出したい
+%\newenvironment{reviewlistblock}{\@@par% このあたり、munepiさんクラスからの理解がおいついていない
+%   \def\caption{%
+%     \refstepcounter{reviewlistblock}%
+%     \expandafter\@firstofone
+%    {\@dblarg{\@caption}}%  dblargというのはカーネルコマンドで、\@dblarg{<command>}{<arg>}が\{<command>}[<arg>]{<arg>}に展開されるのだそうだ。
+%   }%
+%   \long\def\@caption[##1]##2{%
+%     \par
+%     \needspace{\baselineskip}%
+%     \begingroup
+%       \@parboxrestore
+%       \normalsize
+%       \@makecaption{\reviewlistblockname\thereviewlistblock}{\ignorespaces ##2}\par% 最初の引数は「リスト1.1」を作るところ。kernやskipなどを調整すべきか
+%     \endgroup}%
+% }{}
+
+\mdfdefinestyle{review@note}{%
+innertopmargin=3mm,innerbottommargin=3mm,
+innerleftmargin=3mm,innerrightmargin=3mm,
+roundcorner=2mm,
+frametitlefont={\sffamily\bfseries\color{white}},
+frametitlerule=true,
+frametitlebackgroundcolor=black,
+} % frametitleの文字列はi18n化させたい
+\newenvironment{review@note}[1]{%
+ \begin{mdframed}[style=review@note,frametitle={NOTE #1}]%
+  }{\end{mdframed}}%\end{mdframed}
+
+\newenvironment{reviewnote}[1]{%
+  \begin{review@note}[#1]}% なんかこのへんどこか単純に間違ってる… reviewnoteの1つめの引数をframetitleに渡したい、ということ
+ {\end{review@note}}
