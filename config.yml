@@ -23,7 +23,8 @@ epubmaker:
 
 texstyle: reviewmacro
 texdocumentclass: ["jlreq", "twoside"]
-texcommand: "lualatex"
+texcommand: "uplatex"
+#texcommand: "lualatex"
 # texoptions: null
 # dvicommand: "dvipdfmx"
 # dvioptions: "-d 5"
