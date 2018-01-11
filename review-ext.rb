@@ -16,6 +16,30 @@ module ReVIEW
       %Q(←#{escape(str)})
     end
 
+    def inline_i(str)
+      macro('reviewit', escape(str))
+    end
+
+    def inline_b(str)
+      macro('reviewbf', escape(str))
+    end
+
+    def inline_code(str)
+      macro('reviewtt', escape(str))
+    end
+
+    def inline_tt(str)
+      macro('reviewtt', escape(str))
+    end
+
+    def inline_tti(str)
+      macro('reviewtt', macro('reviewit', escape(str)))
+    end
+
+    def inline_ttb(str)
+      macro('reviewtt', macro('reviewbf', escape(str)))
+    end
+
     def common_code_block(id, lines, command, caption, _lang)
       puts '\begin{reviewlistblock}'
       if caption.present?
