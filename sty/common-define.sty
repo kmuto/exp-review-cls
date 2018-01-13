@@ -38,19 +38,83 @@
 \newcommand{\reviewappendix}[0]{\appendix}
 \newcommand{\reviewbackslash}[0]{\textbackslash{}}
 
+% ハイフネーション禁止。@M=10000。@m=1000
+% latexdef 〜 で調べるといいらしい
+\hyphenpenalty\@M\relax
+\exhyphenpenalty\@M\relax
+
+% \Cwd: 和文1文字幅(\zw)
+% \Cvs: baselineskip(和文1行送り)
+%\m@ne: minus one
+% @plus, @minus: 増減マクロ
+%\z@: 0.0pt
+% 1sp: 1/65536pt の極めて微小
+%
+% \newif\if@bar
+% \barfalse
+% DeclareOption{bar}{\@bartrue}
+% のように宣言して、\documentclass[bar]〜 とするとクラス内で\if@bar 真\else 偽\fi の処理ができる
+% texdoc source2e
+
 % \setlength{\parindent}{}: 段落先頭字下げ幅
 % \setlength{\kanjiskip}{}: 和文間アキ
 % \setlength{\xkanjiskip}{}: 和欧間アキ
 
+% \setlength{\columnsep}{}: 2段組のアキ
+% \setlength{\columnseprule}{}: 段組区切り線
+% \setlength{\columnwidth}{}: 2段組の各幅
+% \lineskip: ? 1\p@=1pt
+% 
+
 % \setlength{\mathindent}{}: fleqn下での字下げ幅
 % \setlength{\abovedisplayskip}{}: 長い数式上アキ
-% \setlength{\abovedisplayshortskip}{}: 短い数式上アキ
+% \setlength{\abovedisplayshortskip}{}: 短い数式上アキ。leqnoをしている場合は効果なし?
 % \setlength{\belowdisplayshortskip}{}: 短い数式下アキ
 % \setlength{\belowdisplayskip}{}: 長い数式下アキ
 % \setlength{\arraycolsep}{}: arrayのカラム間アキの半分
 
 % \setlength{\footnotesep}{}: 脚注間アキ
+% \setlength{\skip\footins}{}: 前のページの本文と脚注の間の空白(?)
 % \renewcomamnd{\footnoterule}{}: 罫線
+
+% \setlength{\abovecaptionskip}{}: キャプション上アキ
+% \setlength{\belowcaptionskip}{}: キャプション下アキ
+% \setlength{\floatsep}{}: フロート(図など)間のアキ
+% \setlength{\dblfloatsep}{}: (2段組の場合)
+% \setlength{\textfloatsep}{}: フロート(t,b)と本文の間のアキ
+% \setlength{\intextsep}{}: ページ途中のフロート(h)と本文の間のアキ
+% \renewcommand{\topfraction}{.7}: ページ上部をフロートtが占められる最大割合
+% \renewcommand{\dlbtopfraction}{.7}: (2段組)
+% \renewcommand{\bottomfraction}{}: ページ下部をフロートbが占められる最大割合
+% \renewcommand{\dlbbottomfraction}{}: (2段組)
+% \renewcommand{\textfraction}{.2}: 本文が1ページを占める最小割合
+% \setcounter{topnumber}{2}: ページ上部tフロート最大数
+% \setcounter{dbltopnumber}{}: (2段組)
+% \setcounter{bottomnumber}{2}: ページ下部bフロート最大数
+% \setcounter{totalnumber}{3}: ページあたりのフロート最大数
+%\setlength{\@fptop}{\z@skip}: ページ上から最初のフロートまでのアキ デフォルト{\z@ \@plus 1fil}
+%\setlength{\@fpsep}{\Cvs}: フロート間の定義(floatsepと同じ?と思ったけど定義値はだいぶ違う)  デフォルト{\z@ \@plus 2fil}
+%\setlength{\@fpbot}{\z@skip} 最後のフロートからページ下部までのアキ デフォルト{\z@ \@plus 1fil}
+
+%\setlength\partopsep{\z@}: 新しい段落から始まるときのtopsepへの追加アキ
+% 
+% enumerate: @enumi, @enumii (theenumi, theenumiiを使い番号から別の形に変更可能。記号は\def\labelenumi{\theenumi}がデフォルトなのでこれを変えると●とかにもできる)
+% 
+%\def\@listi{\leftmargin\leftmargini
+%  \topsep \z@
+%  \parsep \z@
+%  \itemsep\parsep%\z@\relax
+%}: listiの定義
+% \let\@listI\@listi: これも必要らしい
+% \linewidth: 現在の行の幅。\hsizeに初期化
+% \leftmargin: 左アキ
+% \rightmargin: 右アキ
+% \listparindent: 各段落の先頭インデント(0〜マイナス値)
+% \labelsep: ラベルと後続テキストとのアキ
+% \itemindent:
+% \itemsep: item間アキ
+% \parsep: item内の段落間アキ
+% \parskip: itemを囲む環境のアキ
 
 % \renewcommand{\prepartname}{}: 第
 % \renewcommand{\postpartname}{}: 部
@@ -60,3 +124,12 @@
 % \renewcommand{\contentsname}{}: 目次
 % \renewcommand{\figurename}{}: 図
 % \renewcommand{\tablename}{}: 表
+
+% \ifodd 奇数 \else 偶数 : 奇数/偶数処理
+% \ifodd\c@page ページが〜
+% \relaxは何もしないが、式やマクロを確実に終えるのに使うことが推奨される({}みたいなもの)
+% \hss: 水平にどこまでも伸びる
+% \vss: 垂直
+% \hbox: 箱を横に並べる
+% \vbox: 垂直
+% \@@par: TeXプリミティブ\parの代替。改行
