@@ -32,5 +32,5 @@ texcommand: "uplatex"
 pdfmaker:
   toc: true
   colophon: true
-#  makeindex: true
-#  makeindex_dic: syntax.dic
+  makeindex: true
+  makeindex_dic: syntax.dic

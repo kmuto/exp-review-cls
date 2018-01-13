@@ -4,14 +4,14 @@
 ]{jlreq}
 
 \usepackage{<%= @texcompiler%>-packages}
-\usepackage{<%= @texcompiler%>-fonts}
+\usepackage{<%= @texcompiler%>-ja-fonts}
 
 % styになるとerbで渡せない。layout.tex.erbでkeyvalに入れておいて、styに渡す、とか?
-\newcommand{\reviewimageref}[2]{<%= escape_latex(I18n.t("image"))%> #1}
-\newcommand{\reviewtableref}[2]{<%= escape_latex(I18n.t("table"))%> #1}
-\newcommand{\reviewlistref}[1]{<%= escape_latex(I18n.t("list"))%> #1}
+\newcommand{\reviewimageref}[2]{<%= escape_latex(I18n.t('image'))%> #1}
+\newcommand{\reviewtableref}[2]{<%= escape_latex(I18n.t('table'))%> #1}
+\newcommand{\reviewlistref}[1]{<%= escape_latex(I18n.t('list'))%> #1}
 \newcommand{\reviewbibref}[2]{#1}
-\newcommand{\reviewcolumnref}[2]{<%= escape_latex(I18n.t("columnname"))%> #1}
+\newcommand{\reviewcolumnref}[2]{<%= escape_latex(I18n.t('columnname'))%> #1}
 \newcommand{\reviewsecref}[2]{#1}
 
 \makeatletter
@@ -31,27 +31,35 @@
 \usepackage{common-define}
 \usepackage{jlreq-layout}
 
+<%- if @config["makeindex"] -%>
+\usepackage{makeidx}
+\makeindex
+<%- end -%>
+
 % 以下ドキュメントコンテンツ
 \begin{document}
 \frontmatter
-<%= @input_files["PREDEF"] %>
+<%= @input_files['PREDEF'] %>
 
-<%- if @config["toc"] -%>
-\setcounter{tocdepth}{<%= @config["toclevel"] - 1 %>}
+<%- if @config['toc'] -%>
+\setcounter{tocdepth}{<%= @config['toclevel'] - 1 %>}
 \tableofcontents
 <%- end -%>
 
 \mainmatter
-<%= @input_files["CHAPS"] %>
+<%= @input_files['CHAPS'] %>
 
 \reviewappendix
-<%= @input_files["APPENDIX"] %>
+<%= @input_files['APPENDIX'] %>
 
-<%- if @input_files["POSTDEF"] or @config["colophon"] -%>
+<%- if @input_files['POSTDEF'] or @config['colophon'] -%>
 \backmatter
 <%- end -%>
 
-<%- if @input_files["POSTDEF"] -%>
-<%= @input_files["POSTDEF"] %>
+<%- if @input_files['POSTDEF'] -%>
+<%= @input_files['POSTDEF'] %>
+<%- end -%>
+<%- if @config['pdfmaker']['makeindex'] -%>
+\printindex
 <%- end -%>
 \end{document}
