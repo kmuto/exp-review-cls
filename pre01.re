@@ -20,6 +20,9 @@ main(int argc, char **argv)
 //image[fractal][フラクタル][latex::width=80mm]{
 //}
 
+//image[fractal-50mm][フラクタル（50mm）]{
+//}
+
 //table[tbl1][前付表]{
 A	B
 -----------------

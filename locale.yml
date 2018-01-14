@@ -1,2 +1,6 @@
 ja:
   part: 第%pR部
+  format_number_header: "%s.%d"
+  format_number_header_without_chapter: "%d"
+  caption_prefix: "　"
+  numberless_image: "図"

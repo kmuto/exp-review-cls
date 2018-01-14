@@ -41,23 +41,24 @@ module ReVIEW
     end
 
     def common_code_block(id, lines, command, caption, _lang)
+      @doc_status[:caption] = true
       puts '\begin{reviewlistblock}'
       if caption.present?
-        cmd = "#{command.sub(/num\Z/, '')}caption"
-        if %w(reviewlist).include?(command)
+        if command =~ /emlist/ || command =~ /cmd/ || command =~ /source/
+          puts macro(command + 'caption', '', compile_inline(caption))
+        else
           begin
             if get_chap.nil?
-              puts macro(cmd, "#{I18n.t('list')}#{I18n.t('format_number_header_without_chapter', [@chapter.list(id).number])}#{I18n.t('caption_prefix')}#{compile_inline(caption)}")
+              puts macro('reviewlistcaption', "#{I18n.t('list')}#{I18n.t('format_number_header_without_chapter', [@chapter.list(id).number])}", compile_inline(caption))
             else
-              puts macro(cmd, "#{I18n.t('list')}#{I18n.t('format_number_header', [get_chap, @chapter.list(id).number])}#{I18n.t('caption_prefix')}#{compile_inline(caption)}")
+              puts macro('reviewlistcaption', "#{I18n.t('list')}#{I18n.t('format_number_header', [get_chap, @chapter.list(id).number])}", compile_inline(caption))
             end
           rescue KeyError
             error "no such list: #{id}"
           end
-        else
-          puts macro(cmd, compile_inline(caption))
         end
       end
+      @doc_status[:caption] = nil
       body = ''
       lines.each_with_index do |line, idx|
         body.concat(yield(line, idx))
@@ -98,13 +99,30 @@ module ReVIEW
       args
     end
 
-    def imgtable_image(id, _caption, metric)
-      metrics = parse_metric('latex', metric)
-      if metrics.present?
-        puts "\\includegraphics[#{metrics}]{#{@chapter.image(id).path}}"
-      else
-        puts "\\includegraphics[width=\\maxwidth]{#{@chapter.image(id).path}}"
+    def imgtable(lines, id, caption = nil, metric = nil)
+      unless @chapter.image(id).bound?
+        warn "image not bound: #{id}"
+        image_dummy id, caption, lines
+        return
       end
+
+      begin
+        if caption.present?
+          @table_caption = true
+          @doc_status[:caption] = true
+          puts '\begin{table}[H]'
+          puts macro('reviewimgtablecaption', compile_inline(caption))
+          @doc_status[:caption] = nil
+        end
+        puts macro('label', table_label(id))
+      rescue ReVIEW::KeyError
+        error "no such table: #{id}"
+      end
+      imgtable_image(id, caption, metric)
+
+      puts '\end{table}' if @table_caption
+      @table_caption = nil
+      blank
     end
 
     def captionblock(type, lines, caption)
@@ -133,6 +151,70 @@ module ReVIEW
         puts "\\addcontentsline{toc}{#{HEADLINE[level]}}{#{compile_inline(caption)}}"
       end
       puts "\\begin{reviewcolumn}[#{compile_inline(caption)}]\n"
+    end
+
+    def table(lines, id = nil, caption = nil)
+      rows = []
+      sepidx = nil
+      lines.each_with_index do |line, idx|
+        if /\A[\=\{\-\}]{12}/ =~ line
+          # just ignore
+          # error "too many table separator" if sepidx
+          sepidx ||= idx
+          next
+        end
+        rows.push(line.strip.split(/\t+/).map { |s| s.sub(/\A\./, '') })
+      end
+      rows = adjust_n_cols(rows)
+
+      puts '\begin{table}[H]'
+      begin
+        table_header id, caption if caption.present?
+      rescue KeyError
+        error "no such table: #{id}"
+      end
+      return if rows.empty?
+      table_begin rows.first.size
+      if sepidx
+        sepidx.times do
+          tr(rows.shift.map { |s| th(s) })
+        end
+        rows.each do |cols|
+          tr(cols.map { |s| td(s) })
+        end
+      else
+        rows.each do |cols|
+          h, *cs = *cols
+          tr([th(h)] + cs.map { |s| td(s) })
+        end
+      end
+      table_end
+    end
+
+    def table_header(id, caption)
+      if id.nil?
+        if caption.present?
+          @table_caption = true
+          @doc_status[:caption] = true
+          puts macro('reviewtablecaption*', compile_inline(caption))
+          @doc_status[:caption] = nil
+        end
+      else
+        if caption.present?
+          @table_caption = true
+          @doc_status[:caption] = true
+          puts macro('reviewtablecaption', compile_inline(caption))
+          @doc_status[:caption] = nil
+        end
+        puts macro('label', table_label(id))
+      end
+    end
+
+    def table_end
+      puts macro('end', 'reviewtable')
+      puts '\end{table}'
+      @table_caption = nil
+      blank
     end
   end
 

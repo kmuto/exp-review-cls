@@ -1,7 +1,56 @@
+% https://github.com/abenori/jlreq/blob/master/README-ja.md
+% https://www.w3.org/TR/jlreq/ja/
 \documentclass[book, twoside, fleqn, onecolumn, final,
   paper=b5,
   fontsize=12Q, jafontsize=12Q, baselineskip=21.6Q
 ]{jlreq}
+% documentclassオプションが複雑すぎるか…後から指定するのは難しそう?
+% book,% chapterを使用するbook環境
+% twoside,% 書籍のような見開きデザイン
+% paper=a5,% 紙サイズ(a0〜a10、b0〜b10(JIS寸法)、c2〜c8)。変型を示すためにpaper={幅mm,高さmm}で指定することも可能
+% fontsize=12Q,% 欧文基本書体Q数(pt指定も可能)
+% jafontsize=12Q,% 和文基本書体Q数(pt指定も可能)
+% baselineskip=21.6Q,% 行送り。普通は和文の1.5〜1.8倍くらい
+% line_length=36zw,% (横書きにおいて)版面の横方向全角文字数。市販書を参考にするとよい
+% number_of_lines=30,% (横書きにおいて)版面の縦方向行数
+% head_space=20mm,% 版面の天アキ
+% gutter=20mm,% 版面のノド(綴じ側)アキ。小口(開き側)アキはline_lengthから算出される
+% headfoot_sidemargin=-10mm,% (横書きにおいて)ノンブル/柱の小口からの横方向相対位置。JLREQ的には0であるべきらしい。傍注は版面扱いのため、sidenote_lengthを指定すると版面はそのノド方向に広がる
+% %sidenote_length=10mm,% 傍注の幅。指定しないと\sidenoteは無効
+% % column_gap=XXmm % twocolumn指定時の段間のアキ
+% % foot_space=XXmm % 版面の地アキ。天と行数から判定させたほうがよい
+% % linegap=XX Q % 行間。本文Qと行送りで指定したほうがよい
+% % open_bracket_pos=[zenkaku_tentsuki/zenkakunibu_nibu/nibu_tentsuki]：始め括弧が行頭に来た際の配置方法を指定します．それぞれ段落開始全角折り返し行頭天付き（デフォルト），段落開始全角二分折り返し行頭二分，段落開始二分折り返し行頭天付きを意味します．→「天」と言ってるのは縦書きの話で、横書きでは左端。横書きだと違いがわからん
+% % hanging_punctuation,% ぶら下げ組
+% jlreq_notes% JLREQ的な警告を表示
+% このほかにoneside, onecolumn, twocolumn, titlepage, notitlepage, draft, final, openright, openany, leqno, fleqn がある
+
+\makeatletter
+
+% RenewとDeclareの違いは？
+%  Declare: 定義されていようがいまいが新規に設定する
+%  New: 「定義されていなければ」Declareを使って設定する。されていればエラー
+%  Renew: 「定義されていなければ」エラー。されていればDeclareを使って再設定する
+%  Provide: 「定義されていなければ」Declareを使って設定する。すでに定義されていたら何もしない
+% よって、継承でもしないかぎり、Declareでよさそう。
+% 節見出しを調整。元の内容をコピーし、second_heading_text_indentの1つめのパラメータ(採番あり側)、2つめのパラメータ(採番なし側)を両方とも0にする。ここは単にTeXなのでzwではなく\zwで記す必要がある
+% \DeclareBlockHeading{section}{1}{font={\jlreq@keepbaselineskip{\Large\sffamily\bfseries}},lines=3,after_label_space=1\zw,second_heading_text_indent={0\zw,0\zw},subtitle_font={\jlreq@keepbaselineskip{\normalsize}}}
+% ある項目だけ、を直すならModifyのほうがよさそう
+\ModifyHeading{section}{second_heading_text_indent={0\zw,0\zw}}
+% BlockHeadingは別行見出し(ページを起こさない、独立した行の見出し。一般的な節や項に使う)
+% 「X.X」部分を指定するlabel_formatがここでは指定されていないようだがちゃんと入ってる(\thesubsection) {label_format}{\edef\jlreq@label@format{\unexpanded{##1}}} か
+% 見出しをページ起こしさせたいときにはpagebreak=clearpageを入れる。デフォルトはnariyuki(この名前はどうなんだろう…)
+% linesが見出しの行取り数。before_lines、after_linesで前後アキ行数も指定可能。before_space、after_spaceならmmなどの単位で指定できる
+% section→subsection
+%
+% TobiraHeadingだと扉見出し。type=hanは版扉(裏白にしない)、type=nakaは中扉(裏白にする)
+%\renewcommand{\thefootnote}{注\inhibitglue\hspace{0pt}\arabic{footnote}\hbox{}\inhibitglue}
+%\jlreq@footnoteindent=0\zw
+% 脚注線はJLREQで固定されているようだ。全体上書きして版面いっぱいにしてみる
+%\edef\footnoterule{%
+%  \unexpanded{\hrule width \textwidth height \jlreq@omotekeiwidth}%
+%  \noexpand\kern\the\jlreq@tempdima
+%}
 
 \usepackage{<%= @texcompiler%>-packages}
 \usepackage{<%= @texcompiler%>-ja-fonts}
@@ -14,7 +63,6 @@
 \newcommand{\reviewcolumnref}[2]{<%= escape_latex(I18n.t('columnname'))%> #1}
 \newcommand{\reviewsecref}[2]{#1}
 
-\makeatletter
 % 以下はよくわかっていない…(munepiさんコード)
 \def\maxwidth{%
   \ifdim\Gin@nat@width>\linewidth
@@ -25,7 +73,6 @@
     \dimexpr\Gin@nat@width - 1\p@ - 3mm\relax
   \fi
 }
-\makeatother% @を戻す
 
 \usepackage{box-tcolorbox}
 \usepackage{common-define}
@@ -35,6 +82,8 @@
 \usepackage{makeidx}
 \makeindex
 <%- end -%>
+
+\makeatother% @を戻す
 
 % 以下ドキュメントコンテンツ
 \begin{document}

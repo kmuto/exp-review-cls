@@ -55,6 +55,43 @@ puts 'Hello'
 $ @<b>{ls /}
 //}
 
+ページをまたぐような長いものが入ると?
+
+//emlist{
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+//}
+
 === 図
 採番・キャプション付きの図の貼り付けはimageを使用します（@<img>{ball}）。図版ファイルは識別子とビルダが対応しているフォーマットから先着順に探索されます。詳細については@<href>{https://github.com/kmuto/review/wiki/ImagePath, ImagePath}のドキュメントを参照してください。
 
